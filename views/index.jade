@@ -1,5 +1,19 @@
-extends layout
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css")
+    script(src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js")
+    script(src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js")
+    link(rel='stylesheet', href='/stylesheets/login.css')
 
-block content
-  h1= title
-  p Welcome to #{title}
+body  h1 Home Page!!
+  p developed by Weihao and Peng
+  button.login(type='submit',value='logout',onClick="onClick()") Log Out
+
+
+script.
+  var onClick=function(){
+    document.cookie = "token= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
+    window.location.replace("/login");
+  }

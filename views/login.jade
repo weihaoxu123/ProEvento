@@ -1,0 +1,42 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css")
+    script(src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js")
+    script(src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js")
+    link(rel='stylesheet', href='/stylesheets/login.css')
+
+body
+    div.formContent
+        h2 Welcome To ProEvento
+        p User Name
+        input#input1(type="text",Name="username")
+        p Password
+        input#input2(type="password",Name="pwd")
+        br
+        button.login(type='submit',value='Login',onClick="onClick()") Log In
+        div.link
+            a(href="/register",title="Register") Register
+
+script.
+    var onClick=function(){
+        if(document.getElementById('input1').value==""||document.getElementById('input2').value==""){
+            alert("input can't be empty!")
+            return
+        }
+        var userName=document.getElementById('input1').value
+        var password=document.getElementById('input2').value
+        $.post("/login",{
+            userName:userName,
+            password:password
+        },function(data,satus){
+            if(data.code==200){
+                window.location.replace("/");
+            }
+            else if(data.code==1){
+                alert("wrong combination!")
+            }
+        })
+    }

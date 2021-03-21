@@ -1,0 +1,21 @@
+.formContent {
+  border-radius: 10px 10px 10px 10px;
+  background: #d0d0d0;
+  margin-left: 30%;
+  width: 35%;
+  padding: 25px;
+}
+.login {
+  margin-top: 7px;
+  width: 80px;
+  height: 30px;
+}
+.link {
+  margin-top: 7px;
+}
+h2 {
+  font-family: fantasy;
+}
+p {
+  margin: 0 0 3px;
+}

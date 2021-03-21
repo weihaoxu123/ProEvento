@@ -3,10 +3,11 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
+var conneciton = require("./db/db_conn")
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var authRouter  = require("./routes/auth")
+var registerRouter =  require("./routes/register")
 
 var app = express();
 
@@ -23,6 +24,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/login', authRouter);
+app.use('/register', registerRouter);
+
+
 
 
 // catch 404 and forward to error handler
@@ -40,5 +44,6 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+var test="INSERT INTO `ProEvento`.`User` (`userId`, `userName`, `password`) VALUES ('1', 'weihao', 'check');"
 
 module.exports = app;

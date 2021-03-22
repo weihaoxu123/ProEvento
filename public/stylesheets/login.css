@@ -19,3 +19,37 @@ h2 {
 p {
   margin: 0 0 3px;
 }
+.space {
+  background: #fcf8e3;
+  border-radius: 10px 10px 10px 10px;
+  padding: 3px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+.eventBox {
+  padding-top: 0px;
+}
+.eventImg {
+  width: 90%;
+  height: 30%;
+}
+a:hover {
+  text-decoration: none;
+}
+#delete {
+  float: right;
+  margin-right: 10%;
+  margin-top: 5px;
+}
+#backbutton {
+  margin-top: 5px;
+  margin-left: 2px;
+}
+#mark {
+  margin-top: 5px;
+  display: inline-block;
+  cursor: pointer;
+}
+#mark:hover {
+  text-decoration: underline;
+}

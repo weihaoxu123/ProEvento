@@ -2,7 +2,8 @@ var express = require('express');
 var router = express.Router();
 var sqlObj=require("../db/sql")
 var connection=require("../db/db_conn")
-/* GET home page. */
+var jwt = require('jsonwebtoken');
+
 router.get('/', function(req, res, next) {
   res.render("register");
 });
@@ -31,6 +32,8 @@ router.post('/', function(req, res, next) {
                         throw err
                     }
                     else{
+                        var token = jwt.sign({ userName: params[0] }, 'shhhhh',{expiresIn:3600});
+                        res.cookie("token",token)
                         return res.json({
                             code: 200,
                             message: '注册成功'

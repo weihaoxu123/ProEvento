@@ -1,0 +1,22 @@
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css")
+    script(src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js")
+    script(src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js")
+    link(rel='stylesheet', href='/stylesheets/login.css')
+
+body
+    include ./component/navbar.jade
+    div.formContent
+        h2 Events owned by you
+        -for(var i = 0; i < list.length ;++i){
+            a(href="/event/"+list[i].event_id)
+                div.card.space
+                    div.card-body
+                    <h5 class="card-title text-muted">#{list[i].title}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">#{list[i].category}</h6>
+                    <p class="card-text text-muted">#{list[i].description}</p>
+        -}
+

@@ -7,8 +7,8 @@ var jwt = require('jsonwebtoken');
 router.get('/', function(req, res, next) {
   res.render("login",{title:"login"});
 });
-params=[]
 router.post('/', function(req, res, next) {
+    params=[]
     params[0]=req.body.userName
     params[1]=req.body.password
     connection.query(sqlObj.loginCheck,params,function(err,result){

@@ -1,0 +1,37 @@
+#description {
+  margin-top: 5px;
+}
+#eventTitle {
+  width: 30%;
+}
+.title {
+  margin-top: 5px;
+}
+.secondPart {
+  border-radius: 10px 10px 10px 10px;
+  background: #d0d0d0;
+  margin-left: 30%;
+  width: 35%;
+  padding: 25px;
+  display: none;
+}
+
+#comment {
+  margin-top: 5px;
+}
+#button {
+  text-align: right;
+  margin-top: 9px;
+}
+#button_left {
+  text-align: left;
+  margin-top: 9px;
+}
+#button_right {
+  display: inline;
+  margin-top: 9px;
+  float: right;
+}
+#backButton {
+  margin-top: 9px;
+}

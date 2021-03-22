@@ -6,6 +6,77 @@ html
     script(src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js")
     script(src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js")
     link(rel='stylesheet', href='/stylesheets/login.css')
+    link(rel='stylesheet', href='/stylesheets/addEvent.css')
 
 body
-    h1 addEvent here
+    include ./component/navbar.jade
+    div.formContent
+        p *event's title?
+        input#eventTitle.form-control(type="text", name="tile")
+        p.title Category
+        select.form-control#select
+            option Politics
+            option Science
+            option Life
+            option Others
+        p#description How about some description?
+        <textarea class="form-control" rows="3" id="comment"></textarea>
+        div#button
+            <button type="button" class="btn btn-primary" id="nextButton" onClick="next()">Next</button>
+    div.secondPart
+        p Date?
+        <input type="time" id="appt" name="appt" min="09:00" max="18:00" required>
+        <input type="date" id="date" name="date">
+        p.title Link?
+        input#link.form-control(type="text", name="tile")
+        p.title Img_path?
+        input#imgPath.form-control(type="text", name="tile")
+        <button type="button" class="btn btn-primary" id="backButton" onClick="goback()">Back</button>
+        div#button_right
+            <button type="button" class="btn btn-primary" onClick="submit()">Submit</button>
+
+script.
+    var next=function(){
+        if(document.getElementById('eventTitle').value==""){
+            alert("title can't be empty!")
+            return
+        }
+        $(".secondPart").css("display", "block");
+        $(".formContent").css("display", "none");
+    }
+    var goback=function(){
+        $(".secondPart").css("display", "none");
+        $(".formContent").css("display", "block");
+    }
+    var submit=function(){
+        var title=document.getElementById('eventTitle').value
+        var category=document.getElementById('select').value
+        var description = document.getElementById('comment').value
+        var time=document.getElementById('appt').value
+        var date=document.getElementById('date').value
+        var link=document.getElementById('link').value
+        var imgPath=document.getElementById('imgPath').value
+
+        if(date==""||time==""||link==""){
+            alert("can't be empty!")
+        }
+        $.post("/event",{
+            title:title,
+            category:category,
+            description:description,
+            time:date+" "+time+":00",
+            link:link,
+            imgPath:imgPath
+        },function(data,satus){
+            console.log(data)
+            if(data.code==200){
+                alert("succesfully created!")
+                window.location.replace("/");
+            }
+            else if(data.code==1){
+                alert("ops error")
+                window.location.replace("/login");
+            }
+        })
+
+    }

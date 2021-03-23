@@ -1,0 +1,23 @@
+.leftPart {
+  width: 45%;
+  float: left;
+  padding: 20px;
+}
+.rightPart {
+  width: 45%;
+  float: left;
+  padding: 20px;
+}
+.eventTitle {
+  width: 50%;
+  display: inline;
+}
+.search {
+  margin-left: 40px;
+  height: 35px;
+  width: 55px;
+}
+.resultSpace {
+  margin-top: 10px;
+  border-top: 1px solid grey;
+}

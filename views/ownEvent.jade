@@ -12,14 +12,53 @@ body
     div.formContent
         h2 Details
         div.jumbotron.eventBox
-            h3 #{event.title}
-            h4 #{event.link}
-            h5 #{event.category}
-            p  #{event.description}
-            img.eventImg(src=event.imgPath)
-            p#mark(onClick="onClick()") mark as started!
+            h3 #{eventA.title}
+            h4 #{eventA.link}
+            h5 #{eventA.category}
+            p  #{eventA.description}
+            img.eventImg(src=eventA.imgPath)
+            div#innerButton
+                -if(eventA.status=="Scheduled"){
+                p#mark(onClick="onClick()") mark as started!
+                -}
+                -else if(eventA.status=="Started"){
+                p#mark(onClick="onComplete()") mark as completed!
+                -}
+                -else{
+                p#mark Expired
+                -}
             <button type="button" class="btn btn-danger" onClick="submit()" id="delete">Delete</button>
 script.
+    var event_id='#{eventA.event_id}';
     var onClick=function(){
-        console.log("111")
+        console.log(event_id)
+        $.post("/event/started",{
+            event_id:event_id
+        },function(data,satus){
+            console.log(data)
+            if(data.code==200){
+                alert("succesfully started!")
+                $("#innerButton").html("<p onClick='onComplete()' id='mark'>mark as completed</p>")
+            }
+            else if(data.code==1){
+                alert("ops error")
+                window.location.replace("/login");
+            }
+        })
+    }
+    var onComplete=function(){
+        console.log(event_id)
+        $.post("/event/completed",{
+            event_id:event_id
+        },function(data,satus){
+            console.log(data)
+            if(data.code==200){
+                alert("succesfully started!")
+                $("#innerButton").html("<p id='mark'>Expired</p>")
+            }
+            else if(data.code==1){
+                alert("ops error")
+                window.location.replace("/login");
+            }
+        })
     }

@@ -53,3 +53,10 @@ a:hover {
 #mark:hover {
   text-decoration: underline;
 }
+#innerButton {
+  display: inline-block;
+}
+#join {
+  margin-right: 10px;
+  margin-left: 5px;
+}

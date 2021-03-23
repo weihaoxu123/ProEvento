@@ -25,6 +25,9 @@ router.get('/',authenticationCheck ,function(req, res, next) {
 router.get('/addEvent',authenticationCheck,function(req, res, next) {
   res.render("addEvent")
 });
+router.get('/plaza',authenticationCheck ,function(req, res, next) {
+  res.render("plaza")
+});
 router.get('/myEvent',authenticationCheck,function(req, res, next) {
   jwt.verify(req.cookies.token, 'shhhhh', function(err, decoded) {
     if(err){
@@ -44,6 +47,81 @@ router.get('/myEvent',authenticationCheck,function(req, res, next) {
     }
   });
 });
+//search for people
+router.post('/people',function(req, res, next) {
+
+  params=[]
+  params[0]=req.body.string+"%"
+  connection.query(sqlObj.searchPeople,params,function(err,result){
+    if(err){
+        console.log(err)
+        throw err
+    }
+  else{res.render("component/peopleSearch.jade",{list:result})}
+})
+
+});
+//search for event
+router.post('/searchEvent',function(req, res, next) {
+
+  params=[]
+  params[0]=req.body.string+"%"
+  connection.query(sqlObj.searchEvent,params,function(err,result){
+    if(err){
+        console.log(err)
+        throw err
+    }
+  else{res.render("component/eventSearch.jade",{list:result})}
+})
+
+});
+//mark an event as started
+router.post('/event/started',function(req,res,next){
+  console.log("reach!")
+  var event_id=req.body.event_id
+  params=[]
+  params[0]=event_id
+  console.log(req.body)
+  connection.query(sqlObj.startEvent,params,function(err,result){
+    if(err){
+      return res.json({
+        code: 1,
+        message: 'failure'
+    })
+    }
+    else{
+      console.log(result)
+      return res.json({
+        code: 200,
+        message: 'success'
+    })
+  }
+}
+  )
+})
+//mark an event as completed
+router.post('/event/completed',function(req,res,next){
+  var event_id=req.body.event_id
+  params=[]
+  params[0]=event_id
+  connection.query(sqlObj.endEvent,params,function(err,result){
+    if(err){
+      return res.json({
+        code: 1,
+        message: 'failure'
+    })
+    }
+    else{
+      console.log(result)
+      return res.json({
+        code: 200,
+        message: 'success'
+    })
+  }
+}
+  )
+})
+//ger specific event
 router.get('/event/:eventId',authenticationCheck,function(req, res, next) {
   jwt.verify(req.cookies.token, 'shhhhh', function(err, decoded) {
     if(err){
@@ -65,11 +143,12 @@ router.get('/event/:eventId',authenticationCheck,function(req, res, next) {
         }
         else{
           if(result[0].owner==(userName)){
-            console.log(result)
-            res.render("ownEvent",{event:result[0]})
+            
+            res.render("ownEvent",{eventA:result[0]})
           }
           else{
-            res.send("hello")
+            console.log(result)
+            res.render("othersEvent",{eventA:result[0]})
           }
         } 
     })

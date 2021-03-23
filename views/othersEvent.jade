@@ -1,0 +1,20 @@
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css")
+    script(src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js")
+    script(src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js")
+    link(rel='stylesheet', href='/stylesheets/login.css')
+body
+    include ./component/navbar.jade
+    div.formContent
+        h2 Details
+        div.jumbotron.eventBox
+            h3 #{eventA.title}
+            h4 #{eventA.link}
+            h5 #{eventA.category}
+            p Owned by:#{eventA.owner}
+            p  #{eventA.description}
+            img.eventImg(src=eventA.imgPath)
+            <button type="button" class="btn btn-primary" onClick="submit()" id="join">Join!</button>

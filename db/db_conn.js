@@ -17,10 +17,11 @@ var createTable=[`CREATE TABLE if not exists ProEvento.user (
         title VARCHAR(45) NULL,
         owner VARCHAR(45) NOT NULL,
         description VARCHAR(255) NULL,
-        link VARCHAR(45) NULL,
+        link BLOB NULL,
         time DATETIME NULL,
         category VARCHAR(45) NULL,
         imgPath BLOB NULL,
+        status VARCHAR(45) NULL DEFAULT 'Scheduled',
         PRIMARY KEY (event_id));
       
   `]

@@ -1,0 +1,31 @@
+html
+  head
+    title= title
+    link(rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css")
+    script(src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js")
+    script(src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js")
+    link(rel='stylesheet', href='/stylesheets/login.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+body
+    include ../component/navbar.jade
+    div.formContent
+        h2 Profile
+        div.info
+            p User Name:#{user.userName}
+            p gender:#{user.gender}
+            p profession:#{user.profession}
+            p motto:#{user.motto}
+            p birthday:#{user.birthday}
+        -if(user.avtar){
+        div.avtar
+        -}
+        h2 Event holded by this user:
+        -for(var i = 0; i < list.length ;++i){
+            a(href="/event/"+list[i].event_id)
+                div.card.space
+                    div.card-body
+                    <h5 class="card-title text-muted">#{list[i].title}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">#{list[i].category}</h6>
+                    <p class="card-text text-muted">#{list[i].description}</p>     
+        -}
+        <button type="button" class="btn btn-primary link" onClick="follow()">Follow</button>

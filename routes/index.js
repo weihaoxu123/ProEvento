@@ -28,6 +28,7 @@ router.get('/addEvent',authenticationCheck,function(req, res, next) {
 router.get('/plaza',authenticationCheck ,function(req, res, next) {
   res.render("plaza")
 });
+
 router.get('/myEvent',authenticationCheck,function(req, res, next) {
   jwt.verify(req.cookies.token, 'shhhhh', function(err, decoded) {
     if(err){
@@ -46,6 +47,102 @@ router.get('/myEvent',authenticationCheck,function(req, res, next) {
     
     }
   });
+});
+router.get('/myProfile',authenticationCheck,function(req, res, next) {
+  jwt.verify(req.cookies.token, 'shhhhh', function(err, decoded) {
+    if(err){
+      res.render("error")
+    }
+    else{
+      params=[]
+      params[0]=decoded.userName
+      connection.query(sqlObj.searchSpecificPeople,params,function(err,result){
+        if(err){
+            console.log(err)
+            throw err
+        }
+        else{
+          console.log(result)
+          if(result.length==0){
+            //no such user
+            res.send("no such user")
+          }
+          else{
+            res.render("./profile/ownProfile.jade",{user:result[0]})
+          }
+        }
+      })
+    }
+  });
+});
+router.get('/user/:userName',authenticationCheck,function(req, res, next) {
+  jwt.verify(req.cookies.token, 'shhhhh', function(err, decoded) {
+    if(err){
+      //not log in
+      res.render("error")
+    }
+    else{
+      params=[]
+      params=req.params.userName
+
+      connection.query(sqlObj.searchSpecificPeople,params,function(err,result){
+        if(err){
+            console.log(err)
+            throw err
+        }
+        else{
+          console.log(result)
+          if(result.length==0){
+            //no such user
+            res.send("no such user")
+          }
+          else{
+            if(decoded.userName==req.params.userName){
+              //viewing your own profile page
+              res.render("./profile/ownProfile.jade",{user:result[0]})
+            }
+       
+            else{
+                connection.query(sqlObj.myEventList,params,function(err,outcome){
+                  if(err){
+                      console.log(err)
+                      throw err
+                  }
+                res.render("./profile/othersProfile.jade",{user:result[0],list:outcome})
+              })
+              
+            }
+          }
+        }
+      })
+    }
+  });
+});
+router.post('/user/:userName',authenticationCheck,function(req, res, next) {
+  updateProfile:"update user set gender=?, profession=?,avtar=?,motto=?,birthday=? where userName=?",
+  params=[]
+  params[0]=req.body.gender
+  params[1]=req.body.profession
+  params[2]=req.body.avtar
+  params[3]=req.body.motto
+  params[4]=req.body.birthday
+  params[5]=req.params.userName
+
+  connection.query(sqlObj.updateProfile,params,function(err,result){
+    if(err){
+        console.log(err)
+        return res.json({
+          code: 1,
+          message: 'failure'
+        })
+    }
+    else{
+      return res.json({
+        code: 200,
+        message: 'success'
+      })
+    }
+  })
 });
 //search for people
 router.post('/people',function(req, res, next) {
@@ -151,7 +248,7 @@ router.get('/event/:eventId',authenticationCheck,function(req, res, next) {
             res.render("othersEvent",{eventA:result[0]})
           }
         } 
-    })
+      })
     
     }
   });

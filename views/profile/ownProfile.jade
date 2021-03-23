@@ -1,0 +1,92 @@
+html
+  head
+    title= title
+    link(rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css")
+    script(src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js")
+    script(src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js")
+    link(rel='stylesheet', href='/stylesheets/login.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/profile.css')
+
+body
+    include ../component/navbar.jade
+    div.formContent#display
+        h2 Profile
+        div.info
+            p User Name:#{user.userName}
+            p gender:#{user.gender}
+            p profession:#{user.profession}
+            p motto:#{user.motto}
+            p birthday:#{user.birthday}
+        -if(user.avtar){
+        div.avtar
+        -}
+        div.bottomGroup
+            <button type="button" class="btn btn-primary" onClick="edit()">Edit</button>
+            a(href="/").follow Followers
+            a(href="/").follow Following
+
+    div.formContent#edit
+        h2 Editing
+        p.title your interest?
+        input#interest.form-control(type="text", name="profession")
+        p.title motto?
+        input#motto.form-control(type="text", name="motto")
+        p.title profile picture?
+        input#profilePic.form-control(type="text", name="motto")
+        p.title Gender
+        select.form-control#select
+            option Male
+            option Female
+            option Don't want to tell
+            option Others
+        p.title Birthday!
+        <input type="date" id="date" name="date">
+        <button type="button" class="btn btn-primary" onClick="back()">Go Back</button>
+        <button type="button" class="btn btn-primary" onClick="submit()">Submit</button>
+    <button type="button" class="btn btn-danger" onClick="logout()" id="logoutButton">Log Out</button>
+
+
+
+
+
+script.
+    var userName='#{user.userName}';
+    var edit=function(){
+        $("#display").css("display","none")
+        $("#edit").css("display","block")
+    }
+    var back=function(){
+        $("#display").css("display","block")
+        $("#edit").css("display","none")
+    }
+    var submit=function(){
+        var profession=document.getElementById('interest').value
+        var motto=document.getElementById('motto').value
+        var avtar = document.getElementById('profilePic').value
+        var gender=document.getElementById('select').value
+        var birthday=document.getElementById('date').value
+        $.post("/user/"+userName,{
+            gender:gender,
+            motto:motto,
+            avtar:avtar,
+            birthday:birthday,
+            profession:profession
+        },function(data,satus){
+            console.log(data)
+            if(data.code==200){
+                alert("succesfully updated!")
+                window.location.replace("/user/"+userName);
+            }
+            else if(data.code==1){
+                alert("ops error")
+                window.location.replace("/login");
+            }
+        })
+        
+    }
+    var logout=function(){
+        console.log("reach!")
+        document.cookie = "token= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
+        window.location.replace("/login");
+    }

@@ -7,8 +7,9 @@ var jwt = require('jsonwebtoken');
 router.get('/', function(req, res, next) {
   res.render("register");
 });
-params=[]
 router.post('/', function(req, res, next) {
+    params=[]
+
     params[0]=req.body.userName
     params[1]=req.body.password
     console.log(params)

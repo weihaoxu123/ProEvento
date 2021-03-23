@@ -1,0 +1,14 @@
+.bottomGroup {
+  margin-top: 10px;
+}
+.follow {
+  float: right;
+  margin-right: 5px;
+}
+#edit {
+  display: none;
+}
+#logoutButton {
+  margin-left: 30%;
+  margin-top: 10px;
+}

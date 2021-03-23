@@ -7,7 +7,9 @@ var sqls={
     getEvent:"select * from event where event_id=?",
     startEvent:"update event set status='Started' where event_id=?",
     endEvent:"update event set status='Completed' where event_id=?",
+    updateProfile:"update user set gender=?, profession=?,avtar=?,motto=?,birthday=? where userName=?",
     searchPeople:"select * from user where userName like ?",
+    searchSpecificPeople:"select * from user where userName= ?",
     searchEvent:"select * from event where title like ?"
 }
 module.exports=sqls

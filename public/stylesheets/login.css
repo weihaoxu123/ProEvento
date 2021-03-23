@@ -60,3 +60,7 @@ a:hover {
   margin-right: 10px;
   margin-left: 5px;
 }
+.rightButton {
+  float: right;
+  margin-top: 10px;
+}

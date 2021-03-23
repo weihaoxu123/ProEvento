@@ -1,13 +1,15 @@
 //<script src="https://cdn.agora.io/sdk/release/AgoraRTCSDK-3.4.0.js"></script>
 
-var appID = "2ad71ba8f058413580c895640cdf0dcb";
-var appCertificate = "cbb222cfeca84c4ba0b1cf3304fe47b7"
+var APP_ID;
+var API_TOKEN;
+var channelName = "myChannel";
+var hostname = 'https://localhost:8080';
 
-var channelName = "myChannel"
-//implement token server
-//testing with temp token
-//note that it expires in 24 hours
-var apiToken = "0062ad71ba8f058413580c895640cdf0dcbIAC7mjJWdrN21+GE2uWJGVrTAJT9hniKZRpADfLVvos2lkOQEggAAAAAEAC5X9YGKtJaYAEAAQAn0lpg"
+
+fetch(hostname + '/access_token?channelName=' + channelName, {method: 'GET'}).then(function(response){return response.json();}).then(function(json){
+    API_TOKEN = json.token;
+    APP_ID = json.APP_ID;
+});
 
 // Handle errors.
 let handleError = function(err){

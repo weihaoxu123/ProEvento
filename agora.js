@@ -5,11 +5,17 @@ var API_TOKEN;
 var channelName = "myChannel";
 var hostname = 'https://localhost:8080';
 
+// Only for local testing
+// Token expires in 24 hours
+var API_TOKEN = '0062ad71ba8f058413580c895640cdf0dcbIACt0o1efe50TWDy2WV734aOVPeTcBSwBxCCb4dh0FU0m0OQEggAAAAAEAC5X9YGIPlaYAEAAQAe+Vpg';
+APP_ID = '2ad71ba8f058413580c895640cdf0dcb';
 
+/*
 fetch(hostname + '/access_token?channelName=' + channelName, {method: 'GET'}).then(function(response){return response.json();}).then(function(json){
     API_TOKEN = json.token;
     APP_ID = json.APP_ID;
 });
+*/
 
 // Handle errors.
 let handleError = function(err){

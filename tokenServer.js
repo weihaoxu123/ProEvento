@@ -1,3 +1,5 @@
+//npm install agora-access-token required
+
 const express = require('express');
 const {RtcTokenBuilder, RtcRole} = require('agora-access-token');
 

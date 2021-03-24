@@ -1,18 +1,16 @@
-html
+extends layout
+block content
   head
-    title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
-    link(rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css")
-    script(src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js")
-    script(src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js")
-    link(rel='stylesheet', href='/stylesheets/login.css')
-
-body
-  include ./component/navbar.jade
-
-
-script.
-  var onClick=function(){
-    document.cookie = "token= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
-    window.location.replace("/login");
-  }
+    title = Homepage
+  body#wrapper
+    h1 ProEvento
+    ul
+      li
+        a(href = "Expolore") Explore Events
+      li
+        - search = {"name": "eName"}
+        span Search By EventID
+        input(name = search.name)
+    h2 About us
+    p ProEvento is designed to serve as a web application that combines a social networking app with Zoom.
+    p You can set up events or join other's events. We are here to connect you!

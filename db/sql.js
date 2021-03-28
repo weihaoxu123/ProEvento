@@ -10,6 +10,12 @@ var sqls={
     updateProfile:"update user set gender=?, profession=?,avtar=?,motto=?,birthday=? where userName=?",
     searchPeople:"select * from user where userName like ?",
     searchSpecificPeople:"select * from user where userName= ?",
-    searchEvent:"select * from event where title like ?"
+    searchEvent:"select * from event where title like ?",
+    searchEventByDate:"select * from event where time like ?",
+    followSomeone:"insert into follower (`follow`,`followed`) values (?,?)",
+    unFollowSomeone:"delete from follower where follow=? AND followed=?",
+    checkFollowStatus:"select * from follower where follow=? AND followed=?",
+    getFollowingList:"select * from follower where follow=?",
+    getFollowedList:"select * from follower where followed=?"
 }
 module.exports=sqls

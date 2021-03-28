@@ -23,8 +23,8 @@ body
         -}
         div.bottomGroup
             <button type="button" class="btn btn-primary" onClick="edit()">Edit</button>
-            a(href="/").follow Followers
-            a(href="/").follow Following
+            a(href="/user/"+user.userName+"/follower").follow Followers
+            a(href="/user/"+user.userName+"/following").follow Following
 
     div.formContent#edit
         h2 Editing

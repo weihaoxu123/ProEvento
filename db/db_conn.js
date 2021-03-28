@@ -27,9 +27,11 @@ var createTable=[`CREATE TABLE if not exists ProEvento.user (
         category VARCHAR(45) NULL,
         imgPath BLOB NULL,
         status VARCHAR(45) NULL DEFAULT 'Scheduled',
-        PRIMARY KEY (event_id));
-      
-  `]
+        PRIMARY KEY (event_id));`,
+    `CREATE TABLE if not exists ProEvento.follower (
+        follow VARCHAR(255) NULL,
+        followed VARCHAR(255) NULL);`
+    ]
   for (var i=0;i<createTable.length;i++){
     connection.query(createTable[i],function(err,result){
         if(err){

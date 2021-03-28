@@ -13,15 +13,20 @@ body
     include ./component/navbar.jade
     div
         div.leftPart
-            h1 Search People by Name
-            input.eventTitle.form-control#people(type="text", name="name",onkeyup="searchPeople()")
-            <button type="button" class="btn btn-primary search" onClick="searchPeople()"><span class="glyphicon glyphicon-search"></span></button>
-            div.resultSpace#peopleResult
-        div.rightPart
             h1 Search Event by Name
             input.eventTitle.form-control#event(type="text", name="tile")
             <button type="button" class="btn btn-primary search" onClick="searchEvent()"><span class="glyphicon glyphicon-search"></span></button>
             div.resultSpace#eventResult
+            h1 Search Event by Date
+            <input type="date" id="date" name="date">
+            <button type="button" class="btn btn-primary search" onClick="searchEventByDate()"><span class="glyphicon glyphicon-search"></span></button>
+            div.resultSpace#eventResultDate
+        div.rightPart
+            h1 Search People by Name
+            input.eventTitle.form-control#people(type="text", name="name",onkeyup="searchPeople()")
+            <button type="button" class="btn btn-primary search" onClick="searchPeople()"><span class="glyphicon glyphicon-search"></span></button>
+            div.resultSpace#peopleResult
+            
 
 script.
     var searchPeople=function(){
@@ -47,5 +52,17 @@ script.
             string:string
         },function(data,satus){
             $("#eventResult").html(data)
+        })
+    }
+    var searchEventByDate=function(){
+        if(document.getElementById('date').value==""){
+            alert("input can't be empty!")
+            return
+        }
+        var string=document.getElementById('date').value
+        $.post("/searchEventByDate",{
+            string:string
+        },function(data,satus){
+            $("#eventResultDate").html(data)
         })
     }

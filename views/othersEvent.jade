@@ -16,6 +16,7 @@ body
             h5 #{eventA.category}
             span Owned by&nbsp
             a(href="/user/"+eventA.owner) #{eventA.owner}
+            p Date:&nbsp#{eventA.time}
             p  #{eventA.description}
             img.eventImg(src=eventA.imgPath)
             <button type="button" class="btn btn-primary" onClick="submit()" id="join">Join!</button>

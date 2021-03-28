@@ -28,4 +28,44 @@ body
                     <h6 class="card-subtitle mb-2 text-muted">#{list[i].category}</h6>
                     <p class="card-text text-muted">#{list[i].description}</p>     
         -}
-        <button type="button" class="btn btn-primary link" onClick="follow()">Follow</button>
+        -if(follow){
+            <button type="button" class="btn btn-primary link" onClick="follow()" style="display:none" id="followButton">Follow</button>
+            <button type="button" class="btn btn-primary link" onClick="unfollow()" style="display:block" id="unfollowButton">Unfollow</button>
+        -}
+        -else{
+            <button type="button" class="btn btn-primary link" onClick="follow()" style="display:block" id="followButton">Follow</button>
+            <button type="button" class="btn btn-primary link" onClick="unfollow()" style="display:none" id="unfollowButton">Unfollow</button>
+        -}
+
+script.
+    var follow=function(){
+        var userName='#{user.userName}';
+        console.log("start follow")
+         $.post("/follow/"+userName,function(data,satus){
+            console.log(data)
+            if(data.code==200){
+                alert("succesfully followed!")
+                $("#unfollowButton").css("display", "block");
+                $("#followButton").css("display", "none");
+            }
+            else if(data.code==1){
+                alert("ops error")
+            }
+        })
+    }
+    var unfollow=function(){
+        var userName='#{user.userName}';
+        console.log("start unfollow")
+         $.post("/follow/delete/"+userName,function(data,satus){
+            console.log(data)
+            if(data.code==200){
+                alert("succesfully unfollowed!")
+                $("#followButton").css("display", "block");
+                $("#unfollowButton").css("display", "none");
+            }
+            else if(data.code==1){
+                alert("ops error")
+            }
+        })
+    }
+

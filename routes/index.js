@@ -3,22 +3,8 @@ var router = express.Router();
 var jwt = require('jsonwebtoken');
 var sqlObj=require("../db/sql")
 var connection=require("../db/db_conn")
-/* GET home page. */
-var authenticationCheck=function(req,res,next){
-  if(req.cookies.token){
-    jwt.verify(req.cookies.token, 'shhhhh', function(err, decoded) {
-      if(err){
-        res.redirect("/login")
-      }
-      else{
-        return next()
-      }
-    });
-  }
-  else{
-    res.redirect("/login")
-  }
-}
+var authenticationCheck=require("../middleware/authenticationCheck")
+
 router.get('/',authenticationCheck ,function(req, res, next) {
   res.render("index")
 });
@@ -62,7 +48,6 @@ router.get('/myProfile',authenticationCheck,function(req, res, next) {
             throw err
         }
         else{
-          console.log(result)
           if(result.length==0){
             //no such user
             res.send("no such user")
@@ -74,6 +59,33 @@ router.get('/myProfile',authenticationCheck,function(req, res, next) {
       })
     }
   });
+});
+router.get('/user/:userName/following',authenticationCheck,function(req, res, next) {
+  params=[]
+  params[0]=req.params.userName
+  connection.query(sqlObj.getFollowingList,params,function(err,result){
+    if(err){
+      console.log(err)
+      throw err
+    }
+    else{
+      console.log(result)
+      res.render("./profile/following.jade",{list:result})
+    }
+});
+})
+router.get('/user/:userName/follower',authenticationCheck,function(req, res, next) {
+  params=[]
+  params[0]=req.params.userName
+  connection.query(sqlObj.getFollowedList,params,function(err,result){
+    if(err){
+      console.log(err)
+      throw err
+    }
+    else{
+      res.render("./profile/follower.jade",{list:result})
+    }
+});
 });
 router.get('/user/:userName',authenticationCheck,function(req, res, next) {
   jwt.verify(req.cookies.token, 'shhhhh', function(err, decoded) {
@@ -108,8 +120,26 @@ router.get('/user/:userName',authenticationCheck,function(req, res, next) {
                       console.log(err)
                       throw err
                   }
-                res.render("./profile/othersProfile.jade",{user:result[0],list:outcome})
+                  params=[]
+                  params[0]=decoded.userName
+                  params[1]=req.params.userName
+                  connection.query(sqlObj.checkFollowStatus,params,function(err,followStatus){
+                    if(err){
+                      console.log(err)
+                      throw err
+                    }
+                    else{
+                      console.log(followStatus.length)
+                      if(followStatus.length==0){
+                        res.render("./profile/othersProfile.jade",{user:result[0],list:outcome,follow:false})
+                      }
+                      else{
+                        res.render("./profile/othersProfile.jade",{user:result[0],list:outcome,follow:true})
+                      }
+                    }
+                  })
               })
+        
               
             }
           }
@@ -164,6 +194,19 @@ router.post('/searchEvent',function(req, res, next) {
   params=[]
   params[0]=req.body.string+"%"
   connection.query(sqlObj.searchEvent,params,function(err,result){
+    if(err){
+        console.log(err)
+        throw err
+    }
+  else{res.render("component/eventSearch.jade",{list:result})}
+})
+
+});
+router.post('/searchEventByDate',function(req, res, next) {
+
+  params=[]
+  params[0]=req.body.string+"%"
+  connection.query(sqlObj.searchEventByDate,params,function(err,result){
     if(err){
         console.log(err)
         throw err

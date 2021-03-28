@@ -3,11 +3,11 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var conneciton = require("./db/db_conn")
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var authRouter  = require("./routes/auth")
 var registerRouter =  require("./routes/register")
+var followRouter =  require("./routes/follow")
 
 var app = express();
 
@@ -25,7 +25,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/login', authRouter);
 app.use('/register', registerRouter);
-
+app.use('/follow', followRouter);
 
 
 

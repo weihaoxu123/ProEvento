@@ -16,6 +16,10 @@ var sqls={
     unFollowSomeone:"delete from follower where follow=? AND followed=?",
     checkFollowStatus:"select * from follower where follow=? AND followed=?",
     getFollowingList:"select * from follower where follow=?",
-    getFollowedList:"select * from follower where followed=?"
+    getFollowedList:"select * from follower where followed=?",
+    checkInvitationStatus:"select * from invitation where event_id=? AND invited_user=?",
+    inviteSomeone:"insert into invitation (`event_id`,`invited_user`) values(?,?)",
+    unInviteSomeone:"delete from invitation where event_id=? AND invited_user=?",
+    getInvitedList:"select * from invitation where event_id=?"
 }
 module.exports=sqls

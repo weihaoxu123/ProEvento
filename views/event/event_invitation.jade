@@ -1,0 +1,39 @@
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css")
+    script(src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js")
+    script(src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js")
+    link(rel='stylesheet', href='/stylesheets/login.css')
+    link(rel='stylesheet', href='/stylesheets/plaza.css')
+
+body
+    include ../component/navbar.jade
+    div
+        div.leftPart
+            h1 Search People by Name
+            input.eventTitle.form-control#people(type="text", name="name")
+            <button type="button" class="btn btn-primary search" onClick="searchPeopleToFollow()"><span class="glyphicon glyphicon-search"></span></button>
+            div.resultSpace#peopleResult
+        div.rightPart
+            h1 Follower/Following
+
+script.
+    var searchPeopleToFollow=function(){
+        var split=document.URL.split("/")
+        console.log(split[4])
+        if(document.getElementById('people').value==""){
+            alert("input can't be empty!")
+            return
+        }
+        var temp_string=document.getElementById('people').value
+        $.post("/people/invitation",{
+            string:temp_string,
+            eventId:split[4]
+        },function(data,satus){
+            $("#peopleResult").html(data)
+            console.log(data)
+        })
+    
+    }

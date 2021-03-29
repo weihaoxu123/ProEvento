@@ -3,6 +3,7 @@ var router = express.Router();
 var jwt = require('jsonwebtoken');
 var sqlObj=require("../db/sql")
 var connection=require("../db/db_conn")
+var sync_connection=require("../db/sync_db_conn")
 var authenticationCheck=require("../middleware/authenticationCheck")
 
 router.get('/',authenticationCheck ,function(req, res, next) {
@@ -149,7 +150,7 @@ router.get('/user/:userName',authenticationCheck,function(req, res, next) {
   });
 });
 router.post('/user/:userName',authenticationCheck,function(req, res, next) {
-  updateProfile:"update user set gender=?, profession=?,avtar=?,motto=?,birthday=? where userName=?",
+  // updateProfile:"update user set gender=?, profession=?,avtar=?,motto=?,birthday=? where userName=?",
   params=[]
   params[0]=req.body.gender
   params[1]=req.body.profession
@@ -335,8 +336,80 @@ router.post("/event",function(req,res,next){
       message: '失败'
   })
   }
-
-
-
 })
+router.get('/event/:eventId/invitation',authenticationCheck,function(req, res, next) {
+  res.render("./event/event_invitation")
+});
+router.post('/event/:eventId/invitation',authenticationCheck,function(req, res, next) {
+  var userName=req.body.userName
+  params=[]
+  params[0]=req.params.eventId
+  params[1]=userName
+  connection.query(sqlObj.inviteSomeone,params,function(err,result){
+    if(err){
+      return res.json({
+        code: 1,
+        message: 'failed'
+      })
+    }
+    else{
+      return res.json({
+        code: 200,
+        message: 'success'
+      })
+    }
+  })
+});
+router.post('/event/:eventId/uninvitation',authenticationCheck,function(req, res, next) {
+  var userName=req.body.userName
+  params=[]
+  params[0]=req.params.eventId
+  params[1]=userName
+  connection.query(sqlObj.unInviteSomeone,params,function(err,result){
+    if(err){
+      return res.json({
+        code: 1,
+        message: 'failed'
+      })
+    }
+    else{
+      return res.json({
+        code: 200,
+        message: 'success'
+      })
+    }
+  })
+});
+router.post('/people/invitation',authenticationCheck,function(req, res, next) {
+  var invited=[]
+  var eventId=req.body.eventId
+  var string=req.body.string+'%'
+  connection.query(sqlObj.searchPeople,string,function(err,result){
+    if(err){
+      console.log(err)
+      throw err
+    }
+    else{ 
+        for(var i=0;i<result.length;i++){
+          params=[]
+          params[0]=eventId
+          params[1]=result[i].userName
+          const outcome=sync_connection.query(sqlObj.checkInvitationStatus,params)
+          if(outcome.length==0){
+            invited.push(false)
+          }
+          else{
+            invited.push(true)
+          }
+
+        }
+        console.log(result,invited)
+        res.render("event/event_peopleSearch.jade",{list:result,invited:invited})
+      
+    }
+  })
+});
+router.get('/event/:eventId/invited',authenticationCheck,function(req, res, next) {
+  res.render("./event/event_invited")
+});
 module.exports = router;

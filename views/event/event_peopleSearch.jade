@@ -1,0 +1,47 @@
+h2 people search outcome: 
+-for(var i = 0; i < list.length ;++i){
+    a(href="/user/"+list[i].userName)
+        div(style="height:45px").card.space
+            div.card-body
+            <h5 class="card-title text-muted" style="display:inline">#{list[i].userName}</h5>
+    -if(invited[i]){
+        <button id="uninvite#{list[i].userName}"+#{i} type="button" class="btn btn-primary" onClick="uninvite(event)" style="display:block">Uninvite</button>
+        <button id="invite#{list[i].userName}"+#{i} type="button" class="btn btn-primary" onClick="invite(event)" style="display:none">Invite</button>
+
+    -}
+    -else{
+        <button id="invite#{list[i].userName}" type="button" class="btn btn-primary" onClick="invite(event)" style="display:block">Invite</button>
+        <button id="uninvite#{list[i].userName}" type="button" class="btn btn-primary" onClick="uninvite(event)" style="display:none">Uninvite</button>
+
+    -}
+-}
+
+script.
+    
+    var invite=function(event){
+        var userName=event.target.id.slice(6)
+        var eventId=document.URL.split("/")[4]
+        $.post("/event/"+eventId+"/invitation",{userName:userName},function(data,status){
+            if(data.code==200){
+                var string='#'+event.target.id
+                var unstring='#un'+event.target.id
+                $(string).css("display","none")
+                $(unstring).css("display","block")
+            } 
+        })
+
+
+    }
+    var uninvite=function(event){
+        var userName=event.target.id.slice(8)
+        var eventId=document.URL.split("/")[4]
+        $.post("/event/"+eventId+"/uninvitation",{userName:userName},function(data,status){
+            if(data.code==200){
+                var unstring='#'+event.target.id
+                var string=unstring.slice(3)    
+                $(unstring).css("display","none")
+                $('#'+string).css("display","block")
+            } 
+        })
+
+    }

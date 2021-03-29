@@ -28,6 +28,11 @@ body
                 -else{
                 p#mark Expired
                 -}
+                -if(eventA.status=="Scheduled"){
+                a.inviteButton(href="/event/"+eventA.event_id+"/invitation",style={display:"block"}) Invite People
+                a.inviteButton(href="/event/"+eventA.event_id+"/invited",style={display:"block"}) Invited
+                -}
+                
             <button type="button" class="btn btn-danger" onClick="submit()" id="delete">Delete</button>
 script.
     var event_id='#{eventA.event_id}';
@@ -40,6 +45,7 @@ script.
             if(data.code==200){
                 alert("succesfully started!")
                 $("#innerButton").html("<p onClick='onComplete()' id='mark'>mark as completed</p>")
+                $(".inviteButton").css("display","none")
             }
             else if(data.code==1){
                 alert("ops error")

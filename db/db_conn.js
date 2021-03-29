@@ -30,7 +30,10 @@ var createTable=[`CREATE TABLE if not exists ProEvento.user (
         PRIMARY KEY (event_id));`,
     `CREATE TABLE if not exists ProEvento.follower (
         follow VARCHAR(255) NULL,
-        followed VARCHAR(255) NULL);`
+        followed VARCHAR(255) NULL);`,
+    `CREATE TABLE if not exists ProEvento.invitation (
+        event_id INT NULL,
+        invited_user VARCHAR(255) NULL);`
     ]
   for (var i=0;i<createTable.length;i++){
     connection.query(createTable[i],function(err,result){

@@ -6,6 +6,7 @@ html
     script(src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js")
     script(src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js")
     link(rel='stylesheet', href='/stylesheets/login.css')
+
 body
     include ./component/navbar.jade
     div.formContent
@@ -20,3 +21,20 @@ body
             p  #{eventA.description}
             img.eventImg(src=eventA.imgPath)
             <button type="button" class="btn btn-primary" onClick="join()" id="join">Join!</button>
+            <button type="button" class="btn btn-primary"  id="unjoin" style="display:none;margin-left:5px">Unjoin!</button>
+
+
+script.
+  var join=function(){
+    var eventId=document.URL.split("/")[4]
+    $.get("/event/"+eventId+"/join",function(data,status){
+      if(data.code==200){
+        alert("joined!")
+        $("#join").css("display","none")
+        $("#unjoin").css("display","block")
+      }
+      else{
+        alert("not invited or error occurs!")
+      }
+    })
+  }

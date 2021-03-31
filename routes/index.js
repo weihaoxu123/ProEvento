@@ -297,6 +297,37 @@ router.get('/event/:eventId',authenticationCheck,function(req, res, next) {
     }
   });
 });
+router.get("/event/:eventId/join",authenticationCheck,function(req,res,next){
+  var eventId=req.params.eventId
+  jwt.verify(req.cookies.token, 'shhhhh', function(err, decoded) {
+    if(err){
+      res.render("error")
+    }
+    else{
+      params=[]
+      params[0]=eventId
+      params[1]=decoded.userName
+      connection.query(sqlObj.checkInvitationStatus,params,function(err,result){
+        if(err){
+          res.render("error")
+        }
+        else{
+          if(result.length==0){
+            return res.json({
+              code:1
+            })
+          }
+          else{
+            return res.json({
+              code:200
+            })
+          }
+          
+        }
+      })
+    }
+  })
+})
 router.post("/event",function(req,res,next){
   if(req.cookies.token){
     jwt.verify(req.cookies.token, 'shhhhh', function(err, decoded) {
@@ -339,6 +370,18 @@ router.post("/event",function(req,res,next){
 })
 router.get('/event/:eventId/invitation',authenticationCheck,function(req, res, next) {
   res.render("./event/event_invitation")
+});
+router.get('/event/:eventId/invited',authenticationCheck,function(req, res, next) {
+  connection.query(sqlObj.getInvitedList,req.params.eventId,function(err,result){
+    if(err){
+      console.log(err)
+      throw err
+    }
+    else{
+      res.render("./event/event_invited",{list:result})
+    }
+  })
+  
 });
 router.post('/event/:eventId/invitation',authenticationCheck,function(req, res, next) {
   var userName=req.body.userName

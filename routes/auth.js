@@ -5,7 +5,20 @@ var connection=require("../db/db_conn")
 var jwt = require('jsonwebtoken');
 
 router.get('/', function(req, res, next) {
-  res.render("login",{title:"login"});
+    if(req.cookies.token){
+        jwt.verify(req.cookies.token, 'shhhhh', function(err, decoded) {
+            if(err){
+            res.render("login",{title:"login"});
+            }
+            else{
+            res.redirect("/")
+            }
+        });
+    }
+    else{
+        res.render("login",{title:"login"});
+    }
+  
 });
 router.post('/', function(req, res, next) {
     params=[]

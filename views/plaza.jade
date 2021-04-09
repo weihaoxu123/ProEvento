@@ -1,6 +1,6 @@
 html
   head
-    title= title
+    title= "ProEvento-Plaza"
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css")
     script(src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js")
@@ -24,7 +24,7 @@ body
         div.rightPart
             h1 Search People by Name
             input.eventTitle.form-control#people(type="text", name="name",onkeyup="searchPeople()")
-            <button type="button" class="btn btn-primary search" onClick="searchPeople()"><span class="glyphicon glyphicon-search"></span></button>
+            <button id="peopleSearch" type="button" class="btn btn-primary search" onClick="searchPeople()"><span class="glyphicon glyphicon-search"></span></button>
             div.resultSpace#peopleResult
             
 

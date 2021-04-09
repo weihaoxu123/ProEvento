@@ -44,6 +44,5 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-var test="INSERT INTO `ProEvento`.`User` (`userId`, `userName`, `password`) VALUES ('1', 'weihao', 'check');"
 
 module.exports = app;

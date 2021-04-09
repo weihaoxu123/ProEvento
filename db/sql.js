@@ -5,7 +5,7 @@ var sqls={
     insertEvent:"INSERT INTO `ProEvento`.`event` ( `title`, `owner`, `description`, `link`,`time`,`category`,`imgPath`) VALUES (?, ?, ?, ?,?,?,?);",
     myEventList:'select * from event where owner=?',
     getEvent:"select * from event where event_id=?",
-    startEvent:"update event set status='Started' where event_id=?",
+    startEvent:"update event set status='Started' where event_id=? AND owner=?",
     endEvent:"update event set status='Completed' where event_id=?",
     updateProfile:"update user set gender=?, profession=?,avtar=?,motto=?,birthday=? where userName=?",
     searchPeople:"select * from user where userName like ?",

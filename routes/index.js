@@ -218,27 +218,45 @@ router.post('/searchEventByDate',function(req, res, next) {
 });
 //mark an event as started
 router.post('/event/started',function(req,res,next){
-  console.log("reach!")
   var event_id=req.body.event_id
   params=[]
   params[0]=event_id
-  console.log(req.body)
-  connection.query(sqlObj.startEvent,params,function(err,result){
+  jwt.verify(req.cookies.token, 'shhhhh', function(err, decoded) {
     if(err){
+      //not log in
       return res.json({
         code: 1,
-        message: 'failure'
-    })
+        message: 'not log in'
+      })
     }
     else{
-      console.log(result)
-      return res.json({
-        code: 200,
-        message: 'success'
-    })
-  }
-}
-  )
+      params[1]=decoded.userName
+      connection.query(sqlObj.startEvent,params,function(err,result){
+        if(err){
+          return res.json({
+            code: 1,
+            message: 'failure'
+          })
+        }
+        else{
+          if(result.affectedRows==1){
+            return res.json({
+              code: 200,
+              message: 'success'
+            })
+          }
+          else{
+            return res.json({
+              code: 1,
+              message: "you don't own this event"
+            })
+          }
+
+        }
+      })
+    }
+  })
+  
 })
 //mark an event as completed
 router.post('/event/completed',function(req,res,next){

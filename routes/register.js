@@ -12,7 +12,6 @@ router.post('/', function(req, res, next) {
 
     params[0]=req.body.userName
     params[1]=req.body.password
-    console.log(params)
 
     connection.query(sqlObj.selectUser,params.slice(0,1),function(err,result){
         if(err){

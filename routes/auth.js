@@ -8,10 +8,10 @@ router.get('/', function(req, res, next) {
     if(req.cookies.token){
         jwt.verify(req.cookies.token, 'shhhhh', function(err, decoded) {
             if(err){
-            res.render("login",{title:"login"});
+                res.render("login",{title:"login"});
             }
             else{
-            res.redirect("/")
+                res.redirect("/")
             }
         });
     }

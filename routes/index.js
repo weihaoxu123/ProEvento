@@ -5,6 +5,7 @@ var sqlObj=require("../db/sql")
 var connection=require("../db/db_conn")
 var sync_connection=require("../db/sync_db_conn")
 var authenticationCheck=require("../middleware/authenticationCheck")
+var deactivatedCheck=require("../middleware/deactivatedCheck")
 
 router.get('/',authenticationCheck ,function(req, res, next) {
   res.render("index")
@@ -61,7 +62,7 @@ router.get('/myProfile',authenticationCheck,function(req, res, next) {
     }
   });
 });
-router.get('/user/:userName/following',authenticationCheck,function(req, res, next) {
+router.get('/user/:userName/following',deactivatedCheck,authenticationCheck,function(req, res, next) {
   params=[]
   params[0]=req.params.userName
   connection.query(sqlObj.getFollowingList,params,function(err,result){
@@ -75,7 +76,7 @@ router.get('/user/:userName/following',authenticationCheck,function(req, res, ne
     }
 });
 })
-router.get('/user/:userName/follower',authenticationCheck,function(req, res, next) {
+router.get('/user/:userName/follower',deactivatedCheck,authenticationCheck,function(req, res, next) {
   params=[]
   params[0]=req.params.userName
   connection.query(sqlObj.getFollowedList,params,function(err,result){
@@ -88,7 +89,7 @@ router.get('/user/:userName/follower',authenticationCheck,function(req, res, nex
     }
 });
 });
-router.get('/user/:userName',authenticationCheck,function(req, res, next) {
+router.get('/user/:userName',deactivatedCheck,authenticationCheck,function(req, res, next) {
   jwt.verify(req.cookies.token, 'shhhhh', function(err, decoded) {
     if(err){
       //not log in
@@ -175,6 +176,70 @@ router.post('/user/:userName',authenticationCheck,function(req, res, next) {
     }
   })
 });
+router.post("/deactivate/:userName",function(req,res,next){
+  jwt.verify(req.cookies.token, 'shhhhh', function(err, decoded) {
+    if(err){
+      //not log in
+      res.render("error")
+    }
+    else{
+      if(req.params.userName!=decoded.userName){
+        //people can only deactivate their own event
+        res.render("error")
+      }
+      else{
+        params=decoded.userName
+        connection.query(sqlObj.deactivaeSomeone,params,function(err,result){
+          if(err){
+            console.log(err)
+            return res.json({
+              code: 1,
+              message: 'failure'
+            })
+          }
+          else{
+            return res.json({
+              code: 200,
+              message: 'success'
+            })
+          }
+        })
+      }
+    }
+  })
+})
+router.post("/activate/:userName",function(req,res,next){
+  jwt.verify(req.cookies.token, 'shhhhh', function(err, decoded) {
+    if(err){
+      //not log in
+      res.render("error")
+    }
+    else{
+      if(req.params.userName!=decoded.userName){
+        //people can only activate their own event
+        res.render("error")
+      }
+      else{
+        params=decoded.userName
+        connection.query(sqlObj.activateSomeone,params,function(err,result){
+          if(err){
+            console.log(err)
+            return res.json({
+              code: 1,
+              message: 'failure'
+            })
+          }
+          else{
+            return res.json({
+              code: 200,
+              message: 'success'
+            })
+          }
+        })
+      }
+    }
+  })
+})
 //search for people
 router.post('/people',function(req, res, next) {
 

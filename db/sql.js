@@ -20,6 +20,8 @@ var sqls={
     checkInvitationStatus:"select * from invitation where event_id=? AND invited_user=?",
     inviteSomeone:"insert into invitation (`event_id`,`invited_user`) values(?,?)",
     unInviteSomeone:"delete from invitation where event_id=? AND invited_user=?",
-    getInvitedList:"select * from invitation where event_id=?"
+    getInvitedList:"select * from invitation where event_id=?",
+    deactivaeSomeone:"update user set deactivated=1 where userName=?",
+    activateSomeone:"update user set deactivated=0 where userName=?"
 }
 module.exports=sqls

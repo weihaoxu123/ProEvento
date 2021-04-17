@@ -2,3 +2,8 @@
   margin-left: 15px;
   width: 70%;
 }
+.splashScreen {
+  display: none;
+  margin-left: 42%;
+  margin-top: 28%;
+}

@@ -6,9 +6,29 @@ html
     script(src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js")
     link(rel='stylesheet', href='/stylesheets/login.css')
     link(rel='stylesheet', href='/stylesheets/index.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+
     
 
 body
-    include ./component/navbar.jade
-    div.exploreSection
-      h1 Explore
+    div.mainPage
+      include ./component/navbar.jade
+      div.exploreSection
+        h1 Explore
+    div.splashScreen
+      h1 Welcome Back to ProEvento
+
+
+script.
+    var splashScreen=function(){
+      $(".splashScreen").css("display","none")
+      $(".mainPage").css("display","block")
+      localStorage.setItem('logIn',0);
+
+    }
+    var myName = localStorage.getItem('logIn');
+    if(myName==1){
+      $(".splashScreen").css("display","block")
+      $(".mainPage").css("display","none")
+      setTimeout(splashScreen, 3000);
+    }

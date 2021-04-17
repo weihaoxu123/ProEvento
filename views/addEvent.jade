@@ -15,10 +15,26 @@ body
         input#eventTitle.form-control(type="text", name="tile")
         p.title Category
         select.form-control#select
-            option Politics
-            option Science
-            option Life
-            option Others
+            option(value="Life") Life  
+            option(value="Science") Science  
+            option(value="Sports") Sports  
+            option(value="Religion") Religion  
+            option(value="Politics") Politics 
+            option(value="Health") Health  
+            option(value="History") History  
+            option(value="Self-improvement") Self-improvement  
+            option(value="Food") Food  
+            option(value="Shopping") Shopping 
+            option(value="Karate") Karate  
+            option(value="NBA") NBA  
+            option(value="NFL") NFL  
+            option(value="Games") Games  
+            option(value="Music") Music 
+            option(value="Fishing") Fishing  
+            option(value="Dance") Dance  
+            option(value="Fashion") Fashion  
+            option(value="CS") CS  
+            option(value="EE") EE 
         p#description How about some description?
         <textarea class="form-control" rows="3" id="comment"></textarea>
         div#button

@@ -31,9 +31,45 @@ script.
             }
         })
     }
-
+    var next=function(){
+        $("#secondPart").css("display", "block");
+        $("#firstPart").css("display", "none");
+    }
+    var goback=function(){
+        $("#secondPart").css("display", "none");
+        $("#firstPart").css("display", "block");
+    }
+    var submit=function(){
+        $("#secondPart").css("display", "none");
+        $("#thirdPart").css("display", "block");
+    }
+    var next4=function(){
+        $("#forthPart").css("display", "block");
+        $("#thirdPart").css("display", "none");
+    }
+    var back2=function(){
+        $("#secondPart").css("display", "block");
+        $("#thirdPart").css("display", "none");
+    }
 body
-    div.formContent
+    div#firstPart.formContent
+        h2 Welcome To ProEvento
+        h3 An app that combines Zoom and Facebook
+        div#button
+            <button type="button" class="btn btn-primary" id="nextButton" onClick="next()">Next</button>
+    div#secondPart.formContent
+        h2 Welcome To ProEvento
+        h3 See some interesting event hosts? You can follow them in ProEvento!
+        <button type="button" class="btn btn-primary" id="backButton" onClick="goback()">Back</button>
+        div#button_right
+            <button type="button" class="btn btn-primary" onClick="submit()">Next</button>
+    div#thirdPart.formContent
+        h2 Welcome To ProEvento
+        h3 You can add your own events with people of shared interests!
+        <button type="button" class="btn btn-primary" id="backButton" onClick="back2()">Back</button>
+        div#button_right
+            <button type="button" class="btn btn-primary" onClick="next4()">Next</button>
+    div#forthPart.formContent
         h2 Welcome To ProEvento
         p User Name
         input#input1(type="text",Name="username")

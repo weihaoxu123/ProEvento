@@ -61,14 +61,14 @@ test("get login page authenticated", async (done)=>{
     done()
 })
 // registration functionality
-test("Post /register with user that doesn't exist", async () => {  
-    const data={userName:"123",password:"123"}
-    await supertest(app).post("/register")
-        .send(data)
-        .then((response) => {
-            expect(response.body.code).toBe(200)
-        });
-    });
+// test("Post /register with user that doesn't exist", async () => {  
+//     const data={userName:"123",password:"123"}
+//     await supertest(app).post("/register")
+//         .send(data)
+//         .then((response) => {
+//             expect(response.body.code).toBe(200)
+//         });
+//     });
 
 test("Post /register with user that exists", async (done) => {  
     const data={userName:"123",password:"123"}

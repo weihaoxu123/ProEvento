@@ -16,6 +16,7 @@ var createTable=[`CREATE TABLE if not exists ProEvento.user (
     avtar BLOB NULL,
     motto VARCHAR(255) NULL,
     birthday DATE NULL,
+    deactivated TINYINT NULL DEFAULT 0,
     PRIMARY KEY (userName));`,
     `CREATE TABLE if not exists ProEvento.event (
         event_id INT NOT NULL AUTO_INCREMENT,

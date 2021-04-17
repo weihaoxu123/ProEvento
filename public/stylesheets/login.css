@@ -64,3 +64,22 @@ a:hover {
   float: right;
   margin-top: 10px;
 }
+#firstPart {
+  display: block;
+}
+#secondPart {
+  display: none;
+}
+#thirdPart {
+  display: none;
+}
+#forthPart {
+  display: none;
+}
+#button {
+  text-align: right;
+}
+#button_right {
+  float: right;
+  display: inline;
+}

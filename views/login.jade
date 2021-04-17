@@ -34,6 +34,7 @@ script.
         },function(data,satus){
             if(data.code==200){
                 window.location.replace("/");
+                localStorage.setItem('logIn',1);
             }
             else if(data.code==1){
                 alert("wrong combination!")

@@ -8,28 +8,57 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='stylesheet', href='/stylesheets/profile.css')
 
+
 body
     include ../component/navbar.jade
     div.formContent#display
         h2 Profile
+        -if(!user.deactivated){
         div.info
             p User Name:#{user.userName}
             p gender:#{user.gender}
-            p profession:#{user.profession}
+            p Interests:#{user.profession}
             p motto:#{user.motto}
             p birthday:#{user.birthday}
+        -}
         -if(user.avtar){
         div.avtar
         -}
+        -if(!user.deactivated){
         div.bottomGroup
             <button type="button" class="btn btn-primary" onClick="edit()">Edit</button>
             a(href="/user/"+user.userName+"/follower").follow Followers
             a(href="/user/"+user.userName+"/following").follow Following
+        -}
+        -else{
+            h3 You are deactivated
+        -}
+
 
     div.formContent#edit
         h2 Editing
         p.title your interest?
-        input#interest.form-control(type="text", name="profession")
+        select#interest(multiple="true",size=8)
+            option(value="Life") Life  
+            option(value="Science") Science  
+            option(value="Sports") Sports  
+            option(value="Religion") Religion  
+            option(value="Politics") Politics 
+            option(value="Health") Health  
+            option(value="History") History  
+            option(value="Self-improvement") Self-improvement  
+            option(value="Food") Food  
+            option(value="Shopping") Shopping 
+            option(value="Karate") Karate  
+            option(value="NBA") NBA  
+            option(value="NFL") NFL  
+            option(value="Games") Games  
+            option(value="Music") Music 
+            option(value="Fishing") Fishing  
+            option(value="Dance") Dance  
+            option(value="Fashion") Fashion  
+            option(value="CS") CS  
+            option(value="EE") EE 
         p.title motto?
         input#motto.form-control(type="text", name="motto")
         p.title profile picture?
@@ -44,7 +73,15 @@ body
         <input type="date" id="date" name="date">
         <button type="button" class="btn btn-primary" onClick="back()">Go Back</button>
         <button type="button" class="btn btn-primary" onClick="submit()">Submit</button>
+    -if(!user.deactivated){
     <button type="button" class="btn btn-danger" onClick="logout()" id="logoutButton">Log Out</button>
+    <button type="button" class="btn btn-danger" onClick="deactivate()" style="display:block;margin-left:30%;margin-top:5px" >Deactivate</button>
+    -}
+    -else{
+    <button type="button" class="btn btn-danger" onClick="logout()" id="logoutButton">Log Out</button>
+    <button type="button" class="btn btn-primary" onClick="activate()" style="display:block;margin-left:30%;margin-top:5px" >Activate</button>
+
+    -}
 
 
 
@@ -61,7 +98,8 @@ script.
         $("#edit").css("display","none")
     }
     var submit=function(){
-        var profession=document.getElementById('interest').value
+        var profession=$('#interest').val().join("|")
+        console.log(profession)
         var motto=document.getElementById('motto').value
         var avtar = document.getElementById('profilePic').value
         var gender=document.getElementById('select').value
@@ -86,7 +124,32 @@ script.
         
     }
     var logout=function(){
-        console.log("reach!")
         document.cookie = "token= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
         window.location.replace("/login");
+    }
+    var deactivate=function(){
+        console.log("deactivate!")
+        $.post("/deactivate/"+userName,function(data,satus){
+            console.log(data)
+            if(data.code==200){
+                alert("succesfully deactivate!")
+                logout()
+            }
+            else if(data.code==1){
+                alert("ops error")
+            }
+        })
+    }
+    var activate=function(){
+        console.log("activate!")
+        $.post("/activate/"+userName,function(data,satus){
+            console.log(data)
+            if(data.code==200){
+                alert("succesfully activate!")
+                window.location.replace("/myProfile");
+            }
+            else if(data.code==1){
+                alert("ops error")
+            }
+        })
     }

@@ -1,0 +1,46 @@
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css")
+    script(src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js")
+    script(src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js")
+    link(rel='stylesheet', href='/stylesheets/login.css')
+
+body
+    include ./component/navbar.jade
+    div.formContent
+        h2 Requested People
+        -for(var i = 0; i < list.length ;++i){
+        a(href="/user/"+list[i].userName)
+            div.card.space
+                div.card-body
+                <h5 class="card-title text-muted" id="peopleName">#{list[i].userName}</h5>
+        <button id="approve#{list[i].userName}"+#{i} type="button" class="btn btn-primary" onClick="approve(event)" style="display:inline;margin-top:5px;">Approve</button>
+        <button id="unapprove#{list[i].userName}"+#{i} type="button" class="btn btn-danger" onClick="deny(event)" style="display:inline;margin-top:5px;">Deny</button>
+        -}
+
+script.
+    
+    var approve=function(event){
+        var userName=event.target.id.slice(7)
+        var groupId=document.URL.split("/")[4]
+        console.log(userName,groupId)
+        $.post("/group/"+groupId+"/approve",{userName:userName},function(data,status){
+            if(data.code==200){
+                var string='#'+event.target.id
+                var unstring='#un'+event.target.id
+                $(string).css("display","none")
+                $(unstring).css("display","none")
+            } 
+        })
+    }
+    var deny=function(event){
+        var userName=event.target.id.slice(6)
+        var groupId=document.URL.split("/")[4]
+        var string='#'+event.target.id
+        var unstring='#un'+event.target.id
+        $(string).css("display","none")
+        $(unstring).css("display","none")
+  
+    }

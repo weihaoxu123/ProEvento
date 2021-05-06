@@ -1,0 +1,49 @@
+h2 people search outcome: 
+-for(var i = 0; i < list.length ;++i){
+    a(href="/user/"+list[i].userName)
+        div.card.space
+            div.card-body
+            <h5 class="card-title text-muted" id="peopleName">#{list[i].userName}</h5>
+    -if(invited[i]){
+        <button id="uninvite#{list[i].userName}"+#{i} type="button" class="btn btn-primary" onClick="uninvite(event)" style="display:block">Uninvite</button>
+        <button id="invite#{list[i].userName}"+#{i} type="button" class="btn btn-primary" onClick="invite(event)" style="display:none">Invite</button>
+
+    -}
+    -else{
+        <button id="invite#{list[i].userName}" type="button" class="btn btn-primary" onClick="invite(event)" style="display:block">Invite</button>
+        <button id="uninvite#{list[i].userName}" type="button" class="btn btn-primary" onClick="uninvite(event)" style="display:none">Uninvite</button>
+
+    -}
+
+-}
+
+script.
+    
+    var invite=function(event){
+        var userName=event.target.id.slice(6)
+        var groupId=document.URL.split("/")[4]
+        console.log(userName,groupId)
+        $.post("/group/"+groupId+"/invitation",{userName:userName},function(data,status){
+            if(data.code==200){
+                var string='#'+event.target.id
+                var unstring='#un'+event.target.id
+                $(string).css("display","none")
+                $(unstring).css("display","block")
+            } 
+        })
+
+
+    }
+    var uninvite=function(event){
+        var userName=event.target.id.slice(8)
+        var groupId=document.URL.split("/")[4]
+        $.post("/group/"+groupId+"/uninvitation",{userName:userName},function(data,status){
+            if(data.code==200){
+                var unstring='#'+event.target.id
+                var string=unstring.slice(3)    
+                $(unstring).css("display","none")
+                $('#'+string).css("display","block")
+            } 
+        })
+
+    }

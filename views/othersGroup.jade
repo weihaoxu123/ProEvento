@@ -1,0 +1,40 @@
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css")
+    script(src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js")
+    script(src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js")
+    link(rel='stylesheet', href='/stylesheets/login.css')
+
+body
+    include ./component/navbar.jade
+    div.formContent
+        h2 Group Detail
+        div.jumbotron.eventBox
+            h3 #{group.name}
+            h5 Owner #{group.owner}
+            h5 #{group.category}
+            p  #{group.description}
+            img.eventImg(src=group.imgPath)
+            -if(!inGroup){
+                <button type="button" class="btn btn-primary" id="submitButton" onClick="submit()" style ="margin-left:5px">Request to Join</button>
+            -}
+            -else{
+                h3 You are in this group
+            -}
+script.
+    var submit=function(){
+        var groupId=document.URL.split("/")[4]
+        $.post("/group/"+groupId+"/join_request",{
+            groupId:groupId
+        },function(data,satus){
+            console.log(data)
+            if(data.code==200){
+                alert("succesfully requested")
+            }
+            else if(data.code==1){
+                alert("ops error")
+            }
+        })
+    }

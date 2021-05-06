@@ -14,6 +14,9 @@ body
         div.jumbotron.eventBox
             h3 #{eventA.title}
             h4 #{eventA.link}
+            -for(var i=0;i<hashTags.length;i++){
+                span ##{hashTags[i].hashtag}
+            -}
             h5 #{eventA.category}
             p Date:&nbsp#{eventA.time}
             p  #{eventA.description}

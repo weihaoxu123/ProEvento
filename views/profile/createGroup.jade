@@ -9,9 +9,9 @@ html
     link(rel='stylesheet', href='/stylesheets/addEvent.css')
 
 body
-    include ./component/navbar.jade
+    include ../component/navbar.jade
     div.formContent
-        p *event's title?
+        p Group Name
         input#eventTitle.form-control(type="text", name="tile")
         p.title Category
         select.form-control#select
@@ -37,65 +37,33 @@ body
             option(value="EE") EE 
         p#description How about some description?
         <textarea class="form-control" rows="3" id="comment"></textarea>
-        p#description HashTags
-        <textarea class="form-control" rows="1" id="hashtags"></textarea>
-        div#button
-            <button type="button" class="btn btn-primary" id="nextButton" onClick="next()">Next</button>
-    div.secondPart
-        p Date?
-        <input type="time" id="appt" name="appt" min="09:00" max="18:00" required>
-        <input type="date" id="date" name="date">
-        p.title Link?
-        input#link.form-control(type="text", name="tile")
         p.title Img_path?
         input#imgPath.form-control(type="text", name="tile")
-        <button type="button" class="btn btn-primary" id="backButton" onClick="goback()">Back</button>
-        div#button_right
-            <button type="button" class="btn btn-primary" onClick="submit()">Submit</button>
+        div#button
+            <button type="button" class="btn btn-primary" id="submitButton" onClick="submit()">Submit</button>
 
-script.
-    var next=function(){
-        if(document.getElementById('eventTitle').value==""){
-            alert("title can't be empty!")
-            return
-        }
-        $(".secondPart").css("display", "block");
-        $(".formContent").css("display", "none");
-    }
-    var goback=function(){
-        $(".secondPart").css("display", "none");
-        $(".formContent").css("display", "block");
-    }
+script. 
     var submit=function(){
         var title=document.getElementById('eventTitle').value
         var category=document.getElementById('select').value
         var description = document.getElementById('comment').value
-        var time=document.getElementById('appt').value
-        var date=document.getElementById('date').value
-        var link=document.getElementById('link').value
         var imgPath=document.getElementById('imgPath').value
-        var hashTags=document.getElementById('hashtags').value
-        if(date==""||time==""||link==""){
+        if(title ==""||category==""||description==""||imgPath==""){
             alert("can't be empty!")
+            return 
         }
-        $.post("/event",{
-            title:title,
+        $.post("/group",{
+            name:title,
             category:category,
             description:description,
-            time:date+" "+time+":00",
-            link:link,
-            imgPath:imgPath,
-            hashTags:hashTags
+            imgPath:imgPath
         },function(data,satus){
             console.log(data)
             if(data.code==200){
                 alert("succesfully created!")
-                window.location.replace("/");
             }
             else if(data.code==1){
                 alert("ops error")
-                window.location.replace("/login");
             }
         })
-
     }

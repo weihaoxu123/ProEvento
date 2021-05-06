@@ -29,6 +29,8 @@ body
             <button type="button" class="btn btn-primary" onClick="edit()">Edit</button>
             a(href="/user/"+user.userName+"/follower").follow Followers
             a(href="/user/"+user.userName+"/following").follow Following
+            div(style='margin-top:-12px;')
+                a(href="/user/"+user.userName+"/group").follow My Group
         -}
         -else{
             h3 You are deactivated

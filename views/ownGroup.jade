@@ -1,0 +1,45 @@
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css")
+    script(src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js")
+    script(src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js")
+    link(rel='stylesheet', href='/stylesheets/login.css')
+
+body
+    include ./component/navbar.jade
+    div.formContent
+        h2 Group Detail
+        div.jumbotron.eventBox
+            h3 #{group.name}
+            h5 #{group.category}
+            p  #{group.description}
+            a(href="/group/"+group.group_id+"/requested") Requested
+            img.eventImg(src=group.imgPath)
+            div
+                -for(var i = 0; i < group_member.length ;++i){
+                    a(href="/user/"+group_member[i].userName)
+                        div.card.space
+                            div.card-body
+                            <h5 class="card-title text-muted" id="peopleName">#{group_member[i].userName}</h5>
+                -}
+                h5 Search People by Name
+                input.eventTitle.form-control#people(type="text", name="name", style="margin-bottom:8px;")
+                <button id="peopleSearch" type="button" class="btn btn-primary search" onClick="search()"><span class="glyphicon glyphicon-search"></span></button>
+                div.resultSpace#peopleResult
+script.
+    var search=function(){
+        if(document.getElementById('people').value==""){
+            alert("input can't be empty!")
+            return
+        }
+        var string=document.getElementById('people').value
+        var groupId=document.URL.split("/")[4]
+        $.post("/people_group",{
+            string:string,
+            groupId:groupId
+        },function(data,satus){
+            $("#peopleResult").html(data)
+        })
+    }

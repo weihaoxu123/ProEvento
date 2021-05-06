@@ -89,6 +89,27 @@ router.get('/user/:userName/follower',deactivatedCheck,authenticationCheck,funct
     }
 });
 });
+router.get('/user/:userName/group',authenticationCheck,function(req, res, next) {
+      params=[]
+      params[0]=req.params.userName
+      connection.query(sqlObj.searchSpecificPeople,params,function(err,result){
+        if(err){
+            console.log(err)
+            throw err
+        }
+        else{
+          
+          connection.query(sqlObj.getGroupList,params,function(err,outcome){
+            console.log(outcome)
+            res.render("./profile/myGroup.jade",{user:result[0],list:outcome})
+          })
+        }
+      })
+
+});
+router.get('/user/:userName/createGroup',authenticationCheck,function(req, res, next) {
+  res.render("./profile/createGroup.jade")
+});
 router.get('/user/:userName',deactivatedCheck,authenticationCheck,function(req, res, next) {
   jwt.verify(req.cookies.token, 'shhhhh', function(err, decoded) {
     if(err){
@@ -252,8 +273,69 @@ router.post('/people',function(req, res, next) {
     }
   else{res.render("component/peopleSearch.jade",{list:result})}
 })
+})
+//search for group
+router.post('/search/group',function(req, res, next) {
 
-});
+  params=[]
+  params[0]=req.body.string+"%"
+  connection.query(sqlObj.searchGroup,params,function(err,result){
+    if(err){
+        console.log(err)
+        throw err
+    }
+  else{res.render("component/groupSearch.jade",{list:result})}
+})
+})
+//search for hashtag
+router.post('/search/hashtag',function(req, res, next) {
+
+  params=[]
+  params[0]=req.body.string
+  connection.query(sqlObj.searchHashtag,params,function(err,result){
+    if(err){
+        console.log(err)
+        throw err
+    }
+    else{
+      event_list=[]
+      for(var i=0;i<result.length;i++){
+        params=[]
+        params[0]=result[i].event_id
+        event_obj=sync_connection.query(sqlObj.getEvent,params)
+        event_list.push(event_obj[0])
+      }
+      res.render("component/eventSearch.jade",{list:event_list})
+    }
+})
+})
+router.post('/people_group',function(req, res, next) {
+  invited=[]
+  params=[]
+  params[0]=req.body.string+"%"
+  connection.query(sqlObj.searchPeople,params,function(err,result){
+    if(err){
+        console.log(err)
+        throw err
+    }
+  else{
+    for(var i=0;i<result.length;i++){
+      params=[]
+      params[0]=req.body.groupId
+      params[1]=result[i].userName
+      const outcome=sync_connection.query(sqlObj.checkGroupStatus,params)
+      if(outcome.length==0){
+        invited.push(false)
+      }
+      else{
+        invited.push(true)
+      }
+    }
+    res.render("component/peopleSearchGroup.jade",{list:result,invited:invited})
+  }
+})
+})
+
 //search for event
 router.post('/searchEvent',function(req, res, next) {
 
@@ -355,7 +437,7 @@ router.get('/event/:eventId',authenticationCheck,function(req, res, next) {
       var userName=decoded.userName
       var eventId= req.params.eventId
       params=[]
-      params=eventId
+      params[0]=eventId
       connection.query(sqlObj.getEvent,params,function(err,result){
         if(err){
             console.log(err)
@@ -366,15 +448,76 @@ router.get('/event/:eventId',authenticationCheck,function(req, res, next) {
           return
         }
         else{
+          hashTags=sync_connection.query(sqlObj.getAllHashtag,params)
+          console.log(hashTags)
           if(result[0].owner==(userName)){
-            
-            res.render("ownEvent",{eventA:result[0]})
+            res.render("ownEvent",{eventA:result[0],hashTags:hashTags})
           }
           else{
             console.log(result)
-            res.render("othersEvent",{eventA:result[0]})
+            res.render("othersEvent",{eventA:result[0],hashTags:hashTags})
           }
         } 
+      })
+    
+    }
+  });
+});
+router.get('/group/:groupId',authenticationCheck,function(req, res, next) {
+  jwt.verify(req.cookies.token, 'shhhhh', function(err, decoded) {
+    if(err){
+      res.render("error")
+    }
+    else{
+      var userName=decoded.userName
+      var groupId= req.params.groupId
+      params=[]
+      params[0]=groupId
+      connection.query(sqlObj.getGroup,params,function(err,result){
+        if(err){
+            console.log(err)
+            throw err
+        }
+        if(result.length==0){
+          res.send("not such event")
+          return
+        }
+        else{
+          if(result[0].owner==(userName)){
+            outcome=sync_connection.query(sqlObj.getMemberList,params)
+            console.log(outcome)
+            res.render("ownGroup",{group:result[0],group_member:outcome})
+          }
+          else{
+            params=[]
+            params[0]=groupId
+            params[1]=userName
+            inGroup=false
+            outcome=sync_connection.query(sqlObj.checkGroupStatus,params)
+            if(outcome.length){
+              inGroup=true
+            }
+            res.render("othersGroup",{group:result[0],inGroup:inGroup})
+          }
+        } 
+      })
+    
+    }
+  });
+});
+router.get('/group/:groupId/requested',authenticationCheck,function(req, res, next) {
+  jwt.verify(req.cookies.token, 'shhhhh', function(err, decoded) {
+    if(err){
+      res.render("error")
+    }
+    else{
+      var userName=decoded.userName
+      var groupId= req.params.groupId
+      params=[]
+      params[0]=groupId
+      connection.query(sqlObj.getRequestList,params,function(err,result){
+        console.log(result)
+        res.render("groupRequested",{list:result})
       })
     
     }
@@ -435,9 +578,58 @@ router.post("/event",function(req,res,next){
                 throw err
             }
             else{
+              console.log(result.insertId);
+              // console.log(req.body.hashTags);
+              var hashTags=req.body.hashTags.split("#")
+              for(var i=0;i<hashTags.length;i++){
+                if(hashTags[i]){
+                params=[]
+                params[0]=result.insertId
+                params[1]=hashTags[i]
+                sync_connection.query(sqlObj.addHashtag,params)
+                }
+              }
                 return res.json({
                     code: 200,
                     message: '添加event成功'
+                })
+            }
+        })
+      }
+    });
+  }
+  else{
+    return res.json({
+      code: 1,
+      message: '失败'
+  })
+  }
+})
+router.post("/group",function(req,res,next){
+  if(req.cookies.token){
+    jwt.verify(req.cookies.token, 'shhhhh', function(err, decoded) {
+      if(err){
+        return res.json({
+          code: 1,
+          message: '失败'
+      })
+      }
+      else{
+          params=[]
+          params[0]=req.body.name
+          params[1]=decoded.userName
+          params[2]=req.body.description
+          params[3]=req.body.imgPath
+          params[4]=req.body.category
+          connection.query(sqlObj.insertGroup,params,function(err,result){
+            if(err){
+                console.log(err)
+                throw err
+            }
+            else{
+                return res.json({
+                    code: 200,
+                    message: '添加group成功'
                 })
             }
         })
@@ -505,6 +697,91 @@ router.post('/event/:eventId/uninvitation',authenticationCheck,function(req, res
       })
     }
   })
+});
+router.post('/group/:groupId/invitation',authenticationCheck,function(req, res, next) {
+  var userName=req.body.userName
+  params=[]
+  params[0]=req.params.groupId
+  params[1]=userName
+  connection.query(sqlObj.inviteSomeoneGroup,params,function(err,result){
+    if(err){
+      return res.json({
+        code: 1,
+        message: 'failed'
+      })
+    }
+    else{
+      return res.json({
+        code: 200,
+        message: 'success'
+      })
+    }
+  })
+});
+router.post('/group/:groupId/approve',authenticationCheck,function(req, res, next) {
+  var userName=req.body.userName
+  params=[]
+  params[0]=req.params.groupId
+  params[1]=userName
+  connection.query(sqlObj.inviteSomeoneGroup,params,function(err,result){
+    if(err){
+      return res.json({
+        code: 1,
+        message: 'failed'
+      })
+    }
+    else{
+      connection.query(sqlObj.deleteRequest,params,function(err,result){
+        return res.json({
+          code: 200,
+          message: 'success'
+        })
+      })
+      
+    }
+  })
+});
+router.post('/group/:groupId/uninvitation',authenticationCheck,function(req, res, next) {
+  var userName=req.body.userName
+  params=[]
+  params[0]=req.params.groupId
+  params[1]=userName
+  connection.query(sqlObj.unInviteSomeoneGroup,params,function(err,result){
+    if(err){
+      return res.json({
+        code: 1,
+        message: 'failed'
+      })
+    }
+    else{
+      return res.json({
+        code: 200,
+        message: 'success'
+      })
+    }
+  })
+});
+router.post('/group/:groupId/join_request',authenticationCheck,function(req, res, next) {
+  jwt.verify(req.cookies.token, 'shhhhh', function(err, decoded) {
+  var userName=decoded.userName
+  params=[]
+  params[0]=req.params.groupId
+  params[1]=userName
+  connection.query(sqlObj.requestToJoin,params,function(err,result){
+    if(err){
+      return res.json({
+        code: 1,
+        message: 'failed'
+      })
+    }
+    else{
+      return res.json({
+        code: 200,
+        message: 'success'
+      })
+    }
+  })
+})
 });
 router.post('/people/invitation',authenticationCheck,function(req, res, next) {
   var invited=[]

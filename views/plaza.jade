@@ -21,14 +21,46 @@ body
             <input type="date" id="date" name="date">
             <button type="button" class="btn btn-primary search" onClick="searchEventByDate()"><span class="glyphicon glyphicon-search"></span></button>
             div.resultSpace#eventResultDate
+            h1 Search Event by HashTag
+            input.eventTitle.form-control#hashtag(type="text", name="name")
+            <button type="button" class="btn btn-primary search" onClick="searchEventByHashtag()"><span class="glyphicon glyphicon-search"></span></button>
+            div.resultSpace#eventResultHashtag
         div.rightPart
             h1 Search People by Name
             input.eventTitle.form-control#people(type="text", name="name",onkeyup="searchPeople()")
             <button id="peopleSearch" type="button" class="btn btn-primary search" onClick="searchPeople()"><span class="glyphicon glyphicon-search"></span></button>
             div.resultSpace#peopleResult
+            h1 Search Group by Name
+            input.eventTitle.form-control#groupName(type="text", name="name")
+            <button id="peopleSearch" type="button" class="btn btn-primary search" onClick="searchGroup()"><span class="glyphicon glyphicon-search"></span></button>
+            div.resultSpace#groupResult
             
 
 script.
+    var searchEventByHashtag=function(){
+        if(document.getElementById('hashtag').value==""){
+            alert("input can't be empty!")
+            return
+        }
+        var string=document.getElementById('hashtag').value
+        $.post("/search/hashtag",{
+            string:string
+        },function(data,satus){
+            $("#eventResultHashtag").html(data)
+        })
+    }
+    var searchGroup=function(){
+        if(document.getElementById('groupName').value==""){
+            alert("input can't be empty!")
+            return
+        }
+        var string=document.getElementById('groupName').value
+        $.post("/search/group",{
+            string:string
+        },function(data,satus){
+            $("#groupResult").html(data)
+        })
+    }
     var searchPeople=function(){
         if(document.getElementById('people').value==""){
             alert("input can't be empty!")

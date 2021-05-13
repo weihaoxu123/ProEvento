@@ -49,6 +49,7 @@ a:hover {
   margin-top: 5px;
   display: inline-block;
   cursor: pointer;
+  margin-right: 15px;
 }
 #mark:hover {
   text-decoration: underline;

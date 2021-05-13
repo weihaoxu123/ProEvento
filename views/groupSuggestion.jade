@@ -1,0 +1,44 @@
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css")
+    script(src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js")
+    script(src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js")
+    link(rel='stylesheet', href='/stylesheets/login.css')
+    link(rel='stylesheet', href='/stylesheets/addEvent.css')
+
+body
+    include ./component/navbar.jade
+    div.formContent
+        p Suggest a title!
+        input#eventTitle.form-control(type="text", name="tile")
+        p#description Suggest description...
+        <textarea class="form-control" rows="3" id="comment"></textarea>
+        div#button_right
+            <button type="button" class="btn btn-primary" onClick="submit()">Submit</button>
+
+script.
+    var submit=function(){
+        var title=document.getElementById('eventTitle').value
+        var description = document.getElementById('comment').value
+        var groupId=document.URL.split("/")[4]
+        if(title==""||description==""){
+            alert("can't be empty!")
+        }
+        $.post("/suggestion",{
+            title:title,
+            description:description,
+            groupId:groupId
+        },function(data,satus){
+            console.log(data)
+            if(data.code==200){
+                alert("succesfully suggest!")
+            }
+            else if(data.code==1){
+                alert("ops error")
+                window.location.replace("/login");
+            }
+        })
+
+    }

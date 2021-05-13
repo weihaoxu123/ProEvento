@@ -427,6 +427,50 @@ router.post('/event/completed',function(req,res,next){
 }
   )
 })
+//mark an event as recordable
+router.post('/event/record',function(req,res,next){
+  var event_id=req.body.event_id
+  params=[]
+  params[0]=event_id
+  connection.query(sqlObj.recordEvent,params,function(err,result){
+    if(err){
+      return res.json({
+        code: 1,
+        message: 'failure'
+    })
+    }
+    else{
+      console.log(result)
+      return res.json({
+        code: 200,
+        message: 'success'
+    })
+  }
+}
+  )
+})
+//mark an event as unrecordable
+router.post('/event/unrecord',function(req,res,next){
+  var event_id=req.body.event_id
+  params=[]
+  params[0]=event_id
+  connection.query(sqlObj.unrecordEvent,params,function(err,result){
+    if(err){
+      return res.json({
+        code: 1,
+        message: 'failure'
+    })
+    }
+    else{
+      console.log(result)
+      return res.json({
+        code: 200,
+        message: 'success'
+    })
+  }
+}
+  )
+})
 //ger specific event
 router.get('/event/:eventId',authenticationCheck,function(req, res, next) {
   jwt.verify(req.cookies.token, 'shhhhh', function(err, decoded) {
@@ -520,6 +564,65 @@ router.get('/group/:groupId/requested',authenticationCheck,function(req, res, ne
         res.render("groupRequested",{list:result})
       })
     
+    }
+  });
+});
+router.get('/group/:groupId/suggestion',authenticationCheck,function(req, res, next) {
+  jwt.verify(req.cookies.token, 'shhhhh', function(err, decoded) {
+    if(err){
+      res.render("error")
+    }
+    else{
+      res.render("groupSuggestion")
+    }
+  });
+});
+router.get('/group/:groupId/suggested',authenticationCheck,function(req, res, next) {
+    params=[]
+    params[0]=req.params.groupId
+    connection.query(sqlObj.getAllSuggestion,params,function(err,result){
+      res.render("groupSuggested",{list:result})
+    })
+
+});
+router.post('/suggestion',authenticationCheck,function(req, res, next) {
+  jwt.verify(req.cookies.token, 'shhhhh', function(err, decoded) {
+    if(err){
+      res.render("error")
+    }
+    else{
+      params=[]
+      params[0]=req.body.groupId
+      params[1]=req.body.title
+      params[2]=req.body.description
+      params[3]=decoded.userName
+      connection.query(sqlObj.createSuggestion,params,function(err,result){
+        return res.json({
+          code:200
+        })
+      })
+    }
+  });
+});
+router.post('/vote',authenticationCheck,function(req, res, next) {
+  jwt.verify(req.cookies.token, 'shhhhh', function(err, decoded) {
+    if(err){
+      res.render("error")
+    }
+    else{
+      params=[]
+      params[0]=req.body.groupId
+      params[1]=req.body.userName
+      connection.query(sqlObj.voteForSuggestion,params,function(err,result){
+        if(err){
+          return res.json({
+            code:1
+          })
+        }
+        return res.json({
+          code:200
+        })
+      })
     }
   });
 });

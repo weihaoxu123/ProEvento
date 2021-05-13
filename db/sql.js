@@ -9,6 +9,8 @@ var sqls={
     getGroup:"select * from userGroup where group_id=?",
     startEvent:"update event set status='Started' where event_id=? AND owner=?",
     endEvent:"update event set status='Completed' where event_id=?",
+    recordEvent:"update event set recordable=1 where event_id=?",
+    unrecordEvent:"update event set recordable=0 where event_id=?",
     updateProfile:"update user set gender=?, profession=?,avtar=?,motto=?,birthday=? where userName=?",
     searchPeople:"select * from user where userName like ?",
     searchGroup:"select * from userGroup where name like ?",
@@ -37,5 +39,8 @@ var sqls={
     addHashtag:"insert into event_hashtag (`event_id`,`hashtag`) values(?,?)",
     getAllHashtag:"select * from event_hashtag where event_id=?",
     searchHashtag:"select * from event_hashtag where hashtag=?",
+    createSuggestion:"insert into suggested_topic (`group_id`,`title`,`description`,`userName`) values(?,?,?,?)",
+    getAllSuggestion:"select * from suggested_topic where group_id=?",
+    voteForSuggestion:"update suggested_topic set voted=voted+1 where group_id=? AND userName=?"
 }
 module.exports=sqls

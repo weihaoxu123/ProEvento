@@ -1,0 +1,34 @@
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css")
+    script(src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js")
+    script(src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js")
+    link(rel='stylesheet', href='/stylesheets/login.css')
+
+body
+    include ./component/navbar.jade
+    div.formContent
+        h2 Suggested Topic
+        -for(var i = 0; i < list.length ;++i){
+            div.card.space
+                div.card-body
+                <h5 class="card-title text-muted">#{list[i].title}</h5>
+                <p class="card-text text-muted">#{list[i].description}</p>
+                <button id="invite#{list[i].userName}"+#{i} type="button" class="btn btn-primary" onClick="vote(event)" style="display:block">Vote</button>
+        -}
+
+script.
+    
+    var vote=function(event){
+        var userName=event.target.id.slice(6)
+        var groupId=document.URL.split("/")[4]
+        console.log(userName,groupId)
+        $.post("/vote",{userName:userName,groupId:groupId},function(data,status){
+            if(data.code==200){
+                alert("succesfully vote!")
+            } 
+        })
+
+    }

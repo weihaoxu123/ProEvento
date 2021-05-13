@@ -25,6 +25,8 @@ body
 
 
 script.
+  var status='#{eventA.status}';
+  var recordable='#{eventA.recordable}';
   var join=function(){
     var eventId=document.URL.split("/")[4]
     $.get("/event/"+eventId+"/join",function(data,status){
@@ -37,4 +39,9 @@ script.
         alert("not invited or error occurs!")
       }
     })
+  }
+  window.onload=function(){
+    if(recordable==1){
+      alert("this event is recordable!")
+    }
   }

@@ -24,6 +24,14 @@ body
             div#innerButton
                 -if(eventA.status=="Scheduled"){
                 p#mark(onClick="onClick()") mark as started!
+                    -if(eventA.recordable){
+                    p#mark.unRecord(onClick="unRecord()",style="display:inline-block") mark as unrecordable
+                    p#mark.Record(onClick="Record()",style="display:none") mark as recordable
+                    -}
+                    -else{
+                    p#mark.unRecord(onClick="unRecord()",style="display:none") mark as unrecordable
+                    p#mark.Record(onClick="Record()",style="display:inline-block") mark as recordable
+                    -}
                 -}
                 -else if(eventA.status=="Started"){
                 p#mark(onClick="onComplete()") mark as completed!
@@ -31,6 +39,7 @@ body
                 -else{
                 p#mark Expired
                 -}
+ 
                 -if(eventA.status=="Scheduled"){
                 a.inviteButton(href="/event/"+eventA.event_id+"/invitation",style={display:"block"}) Invite People
                 a.inviteButton(href="/event/"+eventA.event_id+"/invited",style={display:"block"}) Invited
@@ -65,6 +74,40 @@ script.
             if(data.code==200){
                 alert("succesfully started!")
                 $("#innerButton").html("<p id='mark'>Expired</p>")
+            }
+            else if(data.code==1){
+                alert("ops error")
+                window.location.replace("/login");
+            }
+        })
+    }
+    var Record=function(){
+        console.log(event_id)
+        $.post("/event/record",{
+            event_id:event_id
+        },function(data,satus){
+            console.log(data)
+            if(data.code==200){
+                alert("this event is recordable now")
+                $(".Record").css("display","none")
+                $(".unRecord").css("display","inline-block")
+            }
+            else if(data.code==1){
+                alert("ops error")
+                window.location.replace("/login");
+            }
+        })
+    }
+    var unRecord=function(){
+        console.log(event_id)
+        $.post("/event/unrecord",{
+            event_id:event_id
+        },function(data,satus){
+            console.log(data)
+            if(data.code==200){
+                alert("this event is unrecordable now")
+                $(".Record").css("display","inline-block")
+                $(".unRecord").css("display","none")
             }
             else if(data.code==1){
                 alert("ops error")

@@ -22,6 +22,8 @@ body
             -}
             -else{
                 h3 You are in this group
+                a.inviteButton(href="/group/"+group.group_id+"/suggestion",style={display:"block"}) Suggest Topic
+                a.inviteButton(href="/group/"+group.group_id+"/suggested",style={display:"block"}) Suggested Topic
             -}
 script.
     var submit=function(){

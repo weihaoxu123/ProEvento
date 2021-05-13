@@ -51,7 +51,9 @@ var createTable=[`CREATE TABLE if not exists ProEvento.user (
             userName VARCHAR(45) NULL);`,
         `CREATE TABLE ProEvento.event_hashtag (
             event_id INT NOT NULL,
-            hashtag VARCHAR(45) NOT NULL);`
+            hashtag VARCHAR(45) NOT NULL);`,
+    `ALTER TABLE ProEvento.event 
+    ADD COLUMN recordable TINYINT UNSIGNED NULL DEFAULT 0 AFTER status;`
               
           
           
